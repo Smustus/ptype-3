@@ -6,7 +6,6 @@ import {
   calculateConfidenceInterval,
   calculateMean,
   calculateStandardDeviation,
-  performPairedTTest,
   performWilcoxonSignedRankTest,
 } from "@/utils/calc";
 import TokenUsageChart from "@/components/tokenChart";
@@ -14,11 +13,11 @@ import TokenUsageChart from "@/components/tokenChart";
 export default function ChartsPage() {
   const [comparisons, setComparisons] = useState<Comparison[]>([]);
   const [loading, setLoading] = useState(true);
-  const [normalityResult, setNormalityResult] = useState<{
+  /*  const [normalityResult, setNormalityResult] = useState<{
     statistic: number;
     p_value: number;
     isNormal: boolean | null;
-  }>({ statistic: 0, p_value: 0, isNormal: null });
+  }>({ statistic: 0, p_value: 0, isNormal: null }); */
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [testResult, setTestResult] = useState<any | null>(null);
 
@@ -62,7 +61,7 @@ export default function ChartsPage() {
     [comparisons]
   );
 
-  // Run Shapiro-Wilk test when scoreDiff changes
+  /*   // Run Shapiro-Wilk test when scoreDiff changes
   const runNormalityTest = async (data: number[]) => {
     try {
       const response = await fetch("/api/shapiro", {
@@ -86,23 +85,25 @@ export default function ChartsPage() {
     if (scoreDiff.length > 3) {
       runNormalityTest(scoreDiff);
     }
-  }, [scoreDiff]);
+  }, [scoreDiff]); */
 
   // Run paired test when normality is determined
   useEffect(() => {
-    if (normalityResult.isNormal === null) return;
+    /*  if (normalityResult.isNormal === null) return; */
 
     try {
-      const result = normalityResult.isNormal
+      /*       const result = normalityResult.isNormal
         ? performPairedTTest(baseScores, enhancedScores)
-        : performWilcoxonSignedRankTest(enhancedScores, baseScores);
+        : performWilcoxonSignedRankTest(enhancedScores, baseScores); */
+
+      const result = performWilcoxonSignedRankTest(enhancedScores, baseScores);
 
       setTestResult(result);
       console.log(result);
     } catch (e) {
       console.error("Paired test failed:", e);
     }
-  }, [baseScores, enhancedScores, normalityResult]);
+  }, [baseScores, enhancedScores]);
 
   if (loading) return <div>Loading...</div>;
 
@@ -123,7 +124,7 @@ export default function ChartsPage() {
             <p>SD: {calculateStandardDeviation(scoreDiff).toFixed(4)}</p>
           </div>
         }
-        {normalityResult.isNormal !== null && (
+        {/*   {normalityResult.isNormal !== null && (
           <div className="">
             <h2 className="font-semibold mb-2">Normality Test Results</h2>
             <p>
@@ -136,26 +137,12 @@ export default function ChartsPage() {
               (α = 0.05)
             </p>
           </div>
-        )}
+        )} */}
 
         {testResult && (
           <div className="">
-            <h2 className="font-semibold mb-2">
-              {normalityResult.isNormal ? "Paired T-Test" : "Wilcoxon Test"}{" "}
-              Result
-            </h2>
-            {normalityResult.isNormal ? (
-              <>
-                <p>t-statistic: {testResult.tStatistic.toFixed(4)}</p>
-                <p>p-value: {testResult.pValue}</p>
-                <p>
-                  Result:{" "}
-                  {testResult.pValue < 0.05
-                    ? "Significant ✅"
-                    : "Not significant ❌"}
-                </p>
-              </>
-            ) : (
+            <h2 className="font-semibold mb-2">{"Wilcoxon Test"} Result</h2>
+            {
               <>
                 <p>W: {testResult.W}</p>
                 <p>z-statistic: {testResult.zStatistic.toFixed(4)}</p>
@@ -168,7 +155,7 @@ export default function ChartsPage() {
                     : "Not significant ❌"}
                 </p>
               </>
-            )}
+            }
           </div>
         )}
       </div>
