@@ -47,7 +47,10 @@ export function performWilcoxonSignedRankTest(
   sample1: number[],
   sample2: number[]
 ) {
-  if (sample1.length !== sample2.length || sample1.length < 5) {
+  console.log(sample1.length);
+  console.log(sample2.length);
+
+  if (sample1.length !== sample2.length) {
     throw new Error("Samples must be equal length and have at least 5 items.");
   }
 

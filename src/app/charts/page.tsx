@@ -61,41 +61,8 @@ export default function ChartsPage() {
     [comparisons]
   );
 
-  /*   // Run Shapiro-Wilk test when scoreDiff changes
-  const runNormalityTest = async (data: number[]) => {
-    try {
-      const response = await fetch("/api/shapiro", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ data }),
-      });
-      const result = await response.json();
-
-      setNormalityResult({
-        statistic: result.statistic,
-        p_value: result.p_value,
-        isNormal: result.p_value > 0.05,
-      });
-    } catch (error) {
-      console.error("Normality test failed:", error);
-    }
-  };
-
   useEffect(() => {
-    if (scoreDiff.length > 3) {
-      runNormalityTest(scoreDiff);
-    }
-  }, [scoreDiff]); */
-
-  // Run paired test when normality is determined
-  useEffect(() => {
-    /*  if (normalityResult.isNormal === null) return; */
-
     try {
-      /*       const result = normalityResult.isNormal
-        ? performPairedTTest(baseScores, enhancedScores)
-        : performWilcoxonSignedRankTest(enhancedScores, baseScores); */
-
       const result = performWilcoxonSignedRankTest(enhancedScores, baseScores);
 
       setTestResult(result);
@@ -124,20 +91,6 @@ export default function ChartsPage() {
             <p>SD: {calculateStandardDeviation(scoreDiff).toFixed(4)}</p>
           </div>
         }
-        {/*   {normalityResult.isNormal !== null && (
-          <div className="">
-            <h2 className="font-semibold mb-2">Normality Test Results</h2>
-            <p>
-              Shapiro-Wilk Statistic: {normalityResult.statistic.toFixed(4)}
-            </p>
-            <p>p-value: {normalityResult.p_value}</p>
-            <p className="font-medium">
-              Distribution is{" "}
-              {normalityResult.isNormal ? "normal ✅" : "NOT normal ❌"}
-              (α = 0.05)
-            </p>
-          </div>
-        )} */}
 
         {testResult && (
           <div className="">
